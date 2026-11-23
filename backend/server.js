@@ -63,16 +63,15 @@ initSchema()
   });
 
 // Graceful shutdown
-// sql.js Database.close() is synchronous and takes no callback
+// No explicit close needed: sql.js holds an in-memory database that the OS
+// reclaims when the Node.js process exits.
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down...');
-  if (db) db.close();
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down...');
-  if (db) db.close();
   process.exit(0);
 });
 
