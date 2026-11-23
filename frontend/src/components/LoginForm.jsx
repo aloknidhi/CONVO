@@ -1,6 +1,6 @@
 /**
  * components/LoginForm.jsx - Login / Sign-up form for CONVO
- * Renders toggleable login and registration forms.
+ * Renders toggleable login and registration forms with glossy UI and animations.
  */
 
 import { useState } from 'react';
@@ -43,65 +43,80 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md space-y-6">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-blue-600">CONVO</h1>
-          <p className="text-gray-600">Real-time messaging</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 app-bg">
+      <div className="w-full max-w-md space-y-6 px-4">
+        {/* Brand header with animation */}
+        <div className="text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-2xl font-bold mb-4 shadow-lg animate-pulse-glow mx-auto">
+            C
+          </div>
+          <h1 className="text-3xl font-bold text-blue-600 tracking-tight">CONVO</h1>
+          <p className="text-gray-500 text-sm mt-2">Real-time messaging</p>
         </div>
 
-        <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-          <h2 className="text-xl font-semibold mb-6">
+        {/* Auth card - glossy */}
+        <div className="auth-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <h2 className="text-xl font-semibold mb-6 text-gray-800">
             {mode === 'login' ? 'Welcome back' : 'Create account'}
           </h2>
 
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-700 text-sm border border-red-100">
-              {error}
-            </div>
+            <div className="form-error">{error}</div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'register' && (
               <>
-                <input
-                  name="username"
-                  placeholder="Username"
-                  className="input-field"
-                  value={form.username}
-                  onChange={handleChange}
-                  required
-                />
+                <div className="relative">
+                  <input
+                    name="username"
+                    placeholder="Username"
+                    className="input-field pl-10"
+                    value={form.username}
+                    onChange={handleChange}
+                    required
+                  />
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">👤</div>
+                </div>
+                <div className="relative">
+                  <input
+                    name="email"
+                    placeholder="Email"
+                    type="email"
+                    className="input-field pl-10"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">✉️</div>
+                </div>
+              </>
+            )}
+            {mode !== 'register' && (
+              <div className="relative">
                 <input
                   name="email"
-                  placeholder="Email"
-                  type="email"
-                  className="input-field"
+                  placeholder="Username or email"
+                  className="input-field pl-10"
                   value={form.email}
                   onChange={handleChange}
                   required
                 />
-              </>
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">📧</div>
+              </div>
             )}
-            {mode !== 'register' && (
+            <div className="relative">
               <input
-                name="email"
-                placeholder="Username or email"
-                className="input-field"
-                value={form.email}
+                name="password"
+                placeholder="Password"
+                type="password"
+                className="input-field pl-10"
+                value={form.password}
                 onChange={handleChange}
                 required
               />
-            )}
-            <input
-              name="password"
-              placeholder="Password"
-              type="password"
-              className="input-field"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔒</div>
+            </div>
             <button
               type="submit"
               disabled={loading}
@@ -117,7 +132,7 @@ export default function LoginForm() {
               : 'Already have an account? '}
             <button
               onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-              className="text-blue-600 font-medium underline"
+              className="text-blue-600 font-semibold underline hover:text-blue-700 transition-colors"
             >
               {mode === 'login' ? 'Sign up' : 'Sign in'}
             </button>
