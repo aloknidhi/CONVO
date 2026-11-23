@@ -43,6 +43,7 @@ export default function DashboardPage() {
         <Sidebar
           onConversationSelect={setActiveConversation}
           activeConversationId={activeConversation?.id}
+          onNewConversation={() => setShowNewConv(true)}
         />
       </aside>
 

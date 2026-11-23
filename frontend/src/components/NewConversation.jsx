@@ -3,7 +3,7 @@
  * Lists users to select from and creates the conversation.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../utils/api';
 

@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../utils/api';
 
-export default function Sidebar({ onConversationSelect, activeConversationId }) {
+export default function Sidebar({ onConversationSelect, activeConversationId, onNewConversation }) {
   const { user } = useAuth();
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -92,9 +92,7 @@ export default function Sidebar({ onConversationSelect, activeConversationId }) 
 
       <div className="p-3 border-t border-gray-800">
         <button
-          onClick={() => {
-            // Triggered by parent to start new conversation
-          }}
+          onClick={onNewConversation}
           className="w-full py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white transition text-sm"
         >
           + New conversation
