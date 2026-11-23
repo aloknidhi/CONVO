@@ -1,15 +1,12 @@
-/**
- * components/Sidebar.jsx - Conversation list sidebar for CONVO
- * Shows all conversations the user is part of, with unread indicators.
- * Clicking a conversation selects it for the chat panel.
- */
+// components/Sidebar.jsx - Conversation list sidebar for CONVO
+// Shows all conversations the user is part of, with unread indicators.
+// Clicking a conversation selects it for the chat panel.
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../utils/api';
 
-export default function Sidebar({ onConversationSelect }) {
+export default function Sidebar({ onConversationSelect, activeConversationId }) {
   const { user } = useAuth();
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -65,20 +62,25 @@ export default function Sidebar({ onConversationSelect }) {
             const displayName = isDirect
               ? conv.other_username || 'Unknown'
               : conv.name || 'Group Chat';
+            const isActive = conv.id === activeConversationId;
             return (
               <div
                 key={conv.id}
                 onClick={() => onConversationSelect(conv)}
-                className={`conversation-item flex items-center gap-3 ${
-                  conv.id === (window.selectedConvId || -1) ? 'active' : ''
+                className={`conversation-item flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors ${
+                  isActive
+                    ? 'bg-blue-50 border-l-4 border-blue-600 text-blue-900'
+                    : 'hover:bg-gray-100 border-transparent text-gray-900'
                 }`}
               >
-                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium text-sm shrink-0">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-medium text-sm shrink-0 ${
+                  isDirect ? 'bg-blue-600' : 'bg-purple-600'
+                }">
                   {isDirect ? displayName.charAt(0).toUpperCase() : 'G'}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-medium truncate">{displayName}</div>
-                  <div className="text-xs text-gray-400 truncate">
+                  <div className="text-xs text-gray-500 truncate">
                     {isDirect ? 'Direct message' : 'Group conversation'}
                   </div>
                 </div>

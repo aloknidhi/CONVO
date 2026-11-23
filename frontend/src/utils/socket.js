@@ -1,12 +1,9 @@
-/**
- * utils/socket.js - Socket.io client helper for CONVO
- * Creates and exports a single socket instance connected to the backend.
- * Provides connect/disconnect and auth token handling.
- */
+// utils/socket.js - Socket.io client helper for CONVO
+// Creates and exports a single socket instance connected to the backend.
+// Provides connect/disconnect and auth token handling.
+// SOCKET_URL defaults to the same origin (Vite proxies /socket.io to :5000 in dev).
 
-import { io } from 'socket.io-client';
-
-const SOCKET_URL = 'http://localhost:5000';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || '';
 
 let socket = null;
 

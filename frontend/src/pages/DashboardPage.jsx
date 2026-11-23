@@ -1,8 +1,6 @@
-/**
- * pages/DashboardPage.jsx - Main dashboard for CONVO
- * Layout: sidebar with conversation list + chat panel for active conversation.
- * Includes "New conversation" button to start direct or group chats.
- */
+// pages/DashboardPage.jsx - Main dashboard for CONVO
+// Layout: sidebar with conversation list + chat panel for active conversation.
+// Includes "New conversation" button to start direct or group chats.
 
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
@@ -17,7 +15,7 @@ export default function DashboardPage() {
 
   return (
     <div className="h-screen flex flex-col lg:flex-row bg-gray-50">
-      {/* Header */}
+      {/* Header (mobile only) */}
       <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 lg:hidden">
         <div className="text-xl font-bold text-blue-600">CONVO</div>
         <div className="flex items-center gap-3">
@@ -42,7 +40,10 @@ export default function DashboardPage() {
           <div className="text-xl font-bold text-blue-600 tracking-tight">CONVO</div>
           <div className="text-xs text-gray-400 mt-1">Real-time messaging</div>
         </div>
-        <Sidebar onConversationSelect={setActiveConversation} />
+        <Sidebar
+          onConversationSelect={setActiveConversation}
+          activeConversationId={activeConversation?.id}
+        />
       </aside>
 
       {/* Main content */}

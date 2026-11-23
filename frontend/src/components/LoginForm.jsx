@@ -83,7 +83,7 @@ export default function LoginForm() {
                 />
               </>
             )}
-            {!mode === 'register' && (
+            {mode !== 'register' && (
               <input
                 name="email"
                 placeholder="Username or email"
