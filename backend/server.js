@@ -63,20 +63,17 @@ initSchema()
   });
 
 // Graceful shutdown
+// sql.js Database.close() is synchronous and takes no callback
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down...');
-  db.close((err) => {
-    if (err) console.error(err.message);
-    process.exit(0);
-  });
+  if (db) db.close();
+  process.exit(0);
 });
 
 process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down...');
-  db.close((err) => {
-    if (err) console.error(err.message);
-    process.exit(0);
-  });
+  if (db) db.close();
+  process.exit(0);
 });
 
 module.exports = { app, server, io };
