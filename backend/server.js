@@ -53,7 +53,7 @@ app.get('/api/health', (req, res) => {
 // Initialize database and Socket.io, then start listening
 const PORT = process.env.PORT || 5000;
 
-initSchema()
+const dbReady = initSchema()
   .then(() => {
     initSocket(io);
 
@@ -65,6 +65,8 @@ initSchema()
     console.error('Failed to initialize database:', err);
     process.exit(1);
   });
+
+module.exports = { app, server, io, dbReady };
 
 // Graceful shutdown
 // No explicit close needed: sql.js holds an in-memory database that the OS
@@ -78,5 +80,3 @@ process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down...');
   process.exit(0);
 });
-
-module.exports = { app, server, io };

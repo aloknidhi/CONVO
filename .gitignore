@@ -6,3 +6,4 @@ data/*.db
 dist/
 build/
 npm-debug.log*
+frontend/CONVO/
