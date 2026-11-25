@@ -5,15 +5,11 @@
   "installCommand": "cd frontend && npm install",
   "devCommand": "cd frontend && npm run dev",
   "framework": "vite",
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://convo-backend.onrender.com/api/$1" },
-    { "source": "/socket.io/(.*)", "destination": "https://convo-backend.onrender.com/socket.io/$1" }
-  ],
   "headers": [
     {
       "source": "/socket.io/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "https://convo-frontend.vercel.app" },
+        { "key": "Access-Control-Allow-Origin", "value": "https://convo-x-nine.vercel.app" },
         { "key": "Access-Control-Allow-Credentials", "value": "true" }
       ]
     }

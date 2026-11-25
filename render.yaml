@@ -10,10 +10,10 @@ services:
       - key: PORT
         value: 10000
       - key: CLIENT_URL
-        sync: false
+        value: https://convo-x-nine.vercel.app
       - key: JWT_SECRET
         generateValue: true
     disk:
       name: convo-data
-      mountPath: /home/alok/CONVO/backend/data
+      mountPath: /opt/render/project/backend/data
       sizeGB: 1
