@@ -13,13 +13,20 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Restore session from localStorage on app mount
+  // Restore session from localStorage on app mount.
+  // Guard JSON.parse against corrupt localStorage so a bad convo_user value
+  // can't leave loading=true forever and blank the whole app.
   useEffect(() => {
     const savedToken = localStorage.getItem('convo_token');
     const savedUser = localStorage.getItem('convo_user');
     if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
+      try {
+        setToken(savedToken);
+        setUser(JSON.parse(savedUser));
+      } catch (_) {
+        localStorage.removeItem('convo_token');
+        localStorage.removeItem('convo_user');
+      }
     }
     setLoading(false);
   }, []);
