@@ -96,7 +96,7 @@ function initSocket(io) {
       );
     });
 
-    // Mark messages as read
+    // Mark messages as read and notify the room (read receipts)
     socket.on('mark_read', (conversationId) => {
       const userId = socket.userId;
       db.run(
@@ -104,6 +104,7 @@ function initSocket(io) {
          WHERE conversation_id = ? AND sender_id != ? AND read_at IS NULL`,
         [conversationId, userId]
       );
+      io.to(`conv_${conversationId}`).emit('message_read', { conversationId, userId });
     });
 
     // Handle disconnect

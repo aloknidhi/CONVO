@@ -53,7 +53,7 @@ export default function ChatPanel({ conversation }) {
 
     socket.on('receive_message', (msg) => {
       if (msg.conversation_id == conversation.id) {
-        setMessages((prev) => [...prev, msg]);
+        setMessages((prev) => (prev.find((m) => m.id === msg.id) ? prev : [...prev, msg]));
       }
     });
 
@@ -77,8 +77,14 @@ export default function ChatPanel({ conversation }) {
 
     setSending(true);
     try {
-      await api.sendMessage(conversation.id, input);
+      const data = await api.sendMessage(conversation.id, input);
+      const sent = data && data.message ? data.message : null;
       setInput('');
+      if (sent) {
+        // Show the sent message immediately (optimistic). Dedupe by id so the
+        // Socket.io echo doesn't create a duplicate bubble.
+        setMessages((prev) => (prev.find((m) => m.id === sent.id) ? prev : [...prev, sent]));
+      }
     } catch (err) {
       console.error('Failed to send:', err);
     } finally {

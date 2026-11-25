@@ -25,6 +25,19 @@ async function request(endpoint, options = {}) {
     headers,
   });
 
+  // Session expired / not authorized: clear local storage, notify listeners,
+  // and surface the error so the app can log the user out and redirect.
+  if (res.status === 401 || res.status === 403) {
+    localStorage.removeItem('convo_token');
+    localStorage.removeItem('convo_user');
+    try {
+      window.dispatchEvent(new CustomEvent('convo-session-expired'));
+    } catch (_) {
+      // dispatch only fails in non-browser contexts; ignore
+    }
+    throw new ApiError(res.status, 'Session expired. Please log in again.');
+  }
+
   if (!res.ok) {
     let message = 'Request failed';
     try {

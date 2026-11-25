@@ -17,15 +17,21 @@ router.get('/', authenticateToken, (req, res) => {
 
   const sql = `
     SELECT c.id, c.name, c.is_group, c.created_at,
-           u.username AS other_username, u.id AS other_user_id
+           (SELECT u.username FROM users u
+            JOIN members om ON om.user_id = u.id
+            WHERE om.conversation_id = c.id AND om.user_id != ? AND c.is_group = 0
+            LIMIT 1) AS other_username,
+           (SELECT u.id FROM users u
+            JOIN members om ON om.user_id = u.id
+            WHERE om.conversation_id = c.id AND om.user_id != ? AND c.is_group = 0
+            LIMIT 1) AS other_user_id
     FROM conversations c
     JOIN members m ON c.id = m.conversation_id
-    LEFT JOIN users u ON c.is_group = 0 AND u.id != ?
     WHERE m.user_id = ?
     ORDER BY c.created_at DESC
   `;
 
-  db.all(sql, [userId, userId], (err, rows) => {
+  db.all(sql, [userId, userId, userId], (err, rows) => {
     if (err) {
       return res.status(500).json({ error: 'Database error' });
     }
@@ -120,10 +126,13 @@ router.post('/group', authenticateToken, (req, res) => {
       }
       const convId = this.lastID;
 
-      // Add all members
-      const stmt = db.prepare('INSERT INTO members (conversation_id, user_id) VALUES (?, ?)');
-      allMembers.forEach((uid) => stmt.run(convId, uid));
-      stmt.finalize();
+      // Add all members. db.run() persists each write to disk, so members
+      // survive a restart. (Do not use db.prepare()/stmt.run() here: the
+      // exported db wrapper has no prepare(), and prepared-statement runs
+      // bypass the persist() wrapper.)
+      allMembers.forEach((uid) => {
+        db.run('INSERT INTO members (conversation_id, user_id) VALUES (?, ?)', [convId, uid]);
+      });
 
       res.status(201).json({
         conversation: { id: convId, name, is_group: true },

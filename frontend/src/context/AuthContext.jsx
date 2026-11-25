@@ -53,6 +53,16 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  // Clear session when the API reports an expired/invalid token.
+  // ProtectedRoute picks up isAuthenticated === false and redirects to /login.
+  useEffect(() => {
+    const onExpire = () => {
+      logout();
+    };
+    window.addEventListener('convo-session-expired', onExpire);
+    return () => window.removeEventListener('convo-session-expired', onExpire);
+  }, [logout]);
+
   const value = {
     user,
     token,
