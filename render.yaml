@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: convo-backend
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: "cd backend && npm install"
+    startCommand: "cd backend && npm start"
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+    disk:
+      name: convo-data
+      mountPath: /home/alok/CONVO/backend/data
+      sizeGB: 1

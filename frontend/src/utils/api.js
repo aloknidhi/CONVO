@@ -3,7 +3,7 @@
  * Wraps fetch with automatic JWT Authorization header and error handling.
  */
 
-const BASE_URL = '/api';
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 class ApiError extends Error {
   constructor(status, message) {
